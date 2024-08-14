@@ -54,32 +54,44 @@ def processFile(tfidfFile, logFile, resultDir, fileName, sigma, learning_rate, i
         'silhouette_score': silhouette
     }
 
-def evaluateHyperparameters(tfidfFile, logFile, resultDir, fileName, sigma_values, learning_rate_values, iteration_values):
+def evaluateHyperparameters(tfidfFile, logFile, resultDir, fileName, hyperparameter_configs):
     best_results = []
-    for sigma in sigma_values:
-        for learning_rate in learning_rate_values:
-            for iterations in iteration_values:
-                print(f"Evaluating sigma={sigma}, learning_rate={learning_rate}, iterations={iterations}")
-                result = processFile(tfidfFile, logFile, resultDir, fileName, sigma, learning_rate, iterations)
-                best_results.append(result)
+    for config in hyperparameter_configs:
+        sigma, learning_rate, iterations = config
+        print(f"Evaluating sigma={sigma}, learning_rate={learning_rate}, iterations={iterations}")
+        result = processFile(tfidfFile, logFile, resultDir, fileName, sigma, learning_rate, iterations)
+        best_results.append(result)
     return best_results
 
 def main():
     tfidfFiles = [f'tfidf-{i+1}.csv' for i in range(15)]
     logFiles = [f'accesslog-{i+1}.log' for i in range(15)]
-    resultDir = 'results/1/'
+    resultDir = 'results/satu'
 
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
 
-    sigma_values = [0.3, 1.0, 1.8, 2.5, 3.6, 6.1, 4.2, 6.3, 7.8, 0.5]
-    learning_rate_values = [0.05, 0.4, 0.7, 1.2, 1.8, 2.1, 2.05, 3.6, 5.1, 6.8]
-    iteration_values = [100, 300, 500, 800, 1200, 10, 30, 43, 48, 78]
+    # Define 10 significantly different hyperparameter configurations
+    hyperparameter_configs = [
+        nilai_sigma = [0.3, 1.0, 1.8, 2.5, 3.6, 6.1, 4.2, 6.3, 7.8, 0.5]
+    nilai_kecepatan pembelajaran = [0,05, 0,4, 0,7, 1,2, 1,8, 2,1, 2,05, 3,6, 5,1, 6,8]
+    nilai_iterasi = [100, 300, 500, 800, 1200, 10, 30, 43, 48, 78]
+        (0.3, 0.05, 50),
+        (1.5, 0.4, 300),
+        (1.8, 0.7, 500),
+        (2.5, 1.2, 800),
+        (3.6, 1.8, 1200),
+        (6.1, 2.1, 10),
+        (4.2, 2.05, 30),
+        (6.3, 3.6, 43),
+        (7.8, 5.1, 48),
+        (0.5, 6.8, 78)
+    ]
 
     results = Parallel(n_jobs=-1)(
         delayed(evaluateHyperparameters)(
             tfidfFile, logFile, resultDir, os.path.basename(tfidfFile).replace('.csv', ''),
-            sigma_values, learning_rate_values, iteration_values
+            hyperparameter_configs
         ) for tfidfFile, logFile in zip(tfidfFiles, logFiles)
     )
 
