@@ -67,14 +67,14 @@ def evaluateHyperparameters(tfidfFile, logFile, resultDir, fileName, sigma_value
 def main():
     tfidfFiles = [f'tfidf-{i+1}.csv' for i in range(15)]
     logFiles = [f'accesslog-{i+1}.log' for i in range(15)]
-    resultDir = 'results/'
+    resultDir = 'results/1/'
 
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
 
-    sigma_values = np.arange(0.5, 2.6, 0.5)
-    learning_rate_values = np.arange(0.1, 2.1, 0.4)
-    iteration_values = np.arange(50, 251, 50)
+    sigma_values = [0.3, 1.0, 1.8, 2.5, 3.6, 6.1, 4.2, 6.3, 7.8, 0.5]
+    learning_rate_values = [0.05, 0.4, 0.7, 1.2, 1.8, 2.1, 2.05, 3.6, 5.1, 6.8]
+    iteration_values = [100, 300, 500, 800, 1200, 10, 30, 43, 48, 78]
 
     results = Parallel(n_jobs=-1)(
         delayed(evaluateHyperparameters)(
