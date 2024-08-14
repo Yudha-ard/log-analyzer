@@ -1,7 +1,6 @@
 import pandas as pd
 from minisom import MiniSom
 from sklearn.metrics import silhouette_score
-from joblib import Parallel, delayed
 import os
 
 def saveResults(results, resultDir, fileName):
@@ -73,14 +72,10 @@ def main():
     learning_rate_values = 0.05
     iteration_values = [2, 3, 6, 8, 10, 11, 14, 18, 21]
 
-    results = Parallel(n_jobs=-1)(
-        delayed(evaluateHyperparameters)(
-            tfidfFile, logFile, resultDir, os.path.basename(tfidfFile).replace('.csv', ''),
-            sigma_values, learning_rate_values, iteration_values
-        ) for tfidfFile, logFile in zip(tfidfFiles, logFiles)
-    )
-
-    best_results = [item for sublist in results for item in sublist]
+    best_results = []
+    for tfidfFile, logFile in zip(tfidfFiles, logFiles):
+        result = evaluateHyperparameters(tfidfFile, logFile, resultDir, os.path.basename(tfidfFile).replace('.csv', ''), sigma_values, learning_rate_values, iteration_values)
+        best_results.extend(result)
 
     best_results_df = pd.DataFrame(best_results)
     best_results_df.to_csv(os.path.join(resultDir, 'best_results.csv'), index=False)
