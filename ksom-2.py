@@ -73,9 +73,6 @@ def main():
 
     # Define 10 significantly different hyperparameter configurations
     hyperparameter_configs = [
-        nilai_sigma = [0.3, 1.0, 1.8, 2.5, 3.6, 6.1, 4.2, 6.3, 7.8, 0.5]
-    nilai_kecepatan pembelajaran = [0,05, 0,4, 0,7, 1,2, 1,8, 2,1, 2,05, 3,6, 5,1, 6,8]
-    nilai_iterasi = [100, 300, 500, 800, 1200, 10, 30, 43, 48, 78]
         (0.3, 0.05, 50),
         (1.5, 0.4, 300),
         (1.8, 0.7, 500),
