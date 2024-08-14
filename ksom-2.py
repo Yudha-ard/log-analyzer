@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from minisom import MiniSom
 from sklearn.metrics import silhouette_score
 from joblib import Parallel, delayed
@@ -56,12 +55,10 @@ def processFile(tfidfFile, logFile, resultDir, fileName, sigma, learning_rate, i
 
 def evaluateHyperparameters(tfidfFile, logFile, resultDir, fileName, sigma_values, learning_rate_values, iteration_values):
     best_results = []
-    for sigma in sigma_values:
-        for learning_rate in learning_rate_values:
-            for iterations in iteration_values:
-                print(f"Evaluating sigma={sigma}, learning_rate={learning_rate}, iterations={iterations}")
-                result = processFile(tfidfFile, logFile, resultDir, fileName, sigma, learning_rate, iterations)
-                best_results.append(result)
+    for iterations in iteration_values:
+        print(f"Evaluating sigma={sigma_values}, learning_rate={learning_rate_values}, iterations={iterations}")
+        result = processFile(tfidfFile, logFile, resultDir, fileName, sigma_values, learning_rate_values, iterations)
+        best_results.append(result)
     return best_results
 
 def main():
@@ -72,9 +69,9 @@ def main():
     if not os.path.exists(resultDir):
         os.makedirs(resultDir)
 
-    sigma_values = np.arange(0.5, 2.6, 0.3)
-    learning_rate_values = np.arange(0.1, 2.1, 3)
-    iteration_values = np.arange(3, 20, 3)
+    sigma_values = 0.3
+    learning_rate_values = 0.05
+    iteration_values = [2, 3, 6, 8, 10, 11, 14, 18, 21]
 
     results = Parallel(n_jobs=-1)(
         delayed(evaluateHyperparameters)(
